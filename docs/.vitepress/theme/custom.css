@@ -1,6 +1,6 @@
 /*
-  拉萨路计划 · VitePress 轻美化
-  目标：更像“博客/项目主页”，但保持清爽、可读。
+  拉萨路计划 · VitePress 极简高级感
+  目标：更精致的排版与层次（少即是多）。
 */
 
 :root {
@@ -58,4 +58,39 @@
   --vp-c-brand-1: #7aa2ff;
   --vp-c-brand-2: #5b8cff;
   --vp-c-brand-3: #3e73ff;
+}
+
+/* 首页：最近更新 */
+.recent-updates ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.recent-updates li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+.recent-updates li a {
+  flex: 1;
+  text-decoration: none;
+}
+
+.recent-updates li a:hover {
+  text-decoration: underline;
+}
+
+.recent-updates .date {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+}
+
+.recent-updates-empty {
+  color: var(--vp-c-text-2);
 }

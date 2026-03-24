@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import { companySidebar } from './generated/companySidebar.mjs'
 
 export default defineConfig({
   lang: 'zh-CN',
@@ -19,21 +20,11 @@ export default defineConfig({
     nav: [
       { text: '首页', link: '/' },
       { text: '公司分析', link: '/company/' },
-      { text: '内容目录', link: '/company/content/' }
+      { text: '内容目录', link: '/company/content/' },
+      { text: '关于', link: '/about' }
     ],
 
-    sidebar: {
-      '/company/': [
-        {
-          text: '公司分析',
-          items: [
-            { text: '导览', link: '/company/' },
-            { text: '内容目录', link: '/company/content/' },
-            { text: '字节跳动', link: '/company/content/company_analysis/字节跳动/notes' }
-          ]
-        }
-      ]
-    },
+    sidebar: companySidebar,
 
     outline: { level: [2, 3], label: '本页目录' },
 
