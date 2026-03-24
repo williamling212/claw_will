@@ -26,7 +26,20 @@
 /* 内容区排版：更适合中文长文 */
 .vp-doc {
   font-size: 16px;
-  line-height: 1.8;
+  line-height: 1.85;
+  text-rendering: optimizeLegibility;
+}
+
+/* 正文容器：增加一点“纸张感”，但保持克制 */
+.VPDoc .content-container {
+  padding: 22px 26px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--vp-c-bg) 92%, var(--vp-c-brand-1) 8%);
+}
+
+.dark .VPDoc .content-container {
+  background: color-mix(in srgb, var(--vp-c-bg) 96%, #ffffff 4%);
 }
 
 .vp-doc h1,
@@ -37,6 +50,58 @@
 
 .vp-doc p {
   margin: 14px 0;
+}
+
+/* 标题与锚点更精致 */
+.vp-doc h2 {
+  margin-top: 32px;
+  padding-top: 10px;
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+.vp-doc h3 {
+  margin-top: 22px;
+}
+
+/* 引用块：更像阅读笔记 */
+.vp-doc blockquote {
+  border-left: 3px solid var(--vp-c-brand-2);
+  background: color-mix(in srgb, var(--vp-c-bg-soft) 80%, var(--vp-c-brand-1) 20%);
+  padding: 10px 14px;
+  border-radius: 10px;
+}
+
+.dark .vp-doc blockquote {
+  background: color-mix(in srgb, var(--vp-c-bg-soft) 90%, #ffffff 10%);
+}
+
+/* 行内代码：更清爽 */
+.vp-doc :not(pre) > code {
+  border-radius: 8px;
+  padding: 0.18em 0.42em;
+}
+
+/* 代码块：边框与圆角 */
+.vp-doc div[class*='language-'] {
+  border-radius: 12px;
+  border: 1px solid var(--vp-c-divider);
+}
+
+/* 表格：更易读 */
+.vp-doc table {
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid var(--vp-c-divider);
+}
+
+.vp-doc th {
+  background: var(--vp-c-bg-soft);
+}
+
+.vp-doc tr:nth-child(2n) td {
+  background: color-mix(in srgb, var(--vp-c-bg) 94%, var(--vp-c-bg-soft) 6%);
 }
 
 /* 侧边栏更紧凑一点 */
