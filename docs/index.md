@@ -21,6 +21,7 @@ features:
 ---
 
 <script setup>
+import { withBase } from 'vitepress'
 import { recentCompanyUpdates } from './.vitepress/generated/recentCompanyUpdates.mjs'
 </script>
 
@@ -29,7 +30,7 @@ import { recentCompanyUpdates } from './.vitepress/generated/recentCompanyUpdate
 <div v-if="recentCompanyUpdates.length" class="recent-updates">
   <ul>
     <li v-for="item in recentCompanyUpdates" :key="item.link">
-      <a :href="item.link">{{ item.text }}</a>
+      <a :href="withBase(item.link)">{{ item.text }}</a>
       <span class="date">{{ item.date }}</span>
     </li>
   </ul>
