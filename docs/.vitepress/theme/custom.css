@@ -1,0 +1,61 @@
+/*
+  拉萨路计划 · VitePress 轻美化
+  目标：更像“博客/项目主页”，但保持清爽、可读。
+*/
+
+:root {
+  /* 品牌色 */
+  --vp-c-brand-1: #5b8cff;
+  --vp-c-brand-2: #3e73ff;
+  --vp-c-brand-3: #2f61e8;
+
+  /* 首页标题更有分量 */
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(120deg, #2f61e8 0%, #7c3aed 50%, #06b6d4 100%);
+}
+
+/* 主页 Hero 更像产品页 */
+.VPHomeHero .name {
+  letter-spacing: -0.02em;
+}
+
+.VPHomeHero .text {
+  max-width: 42rem;
+}
+
+/* 内容区排版：更适合中文长文 */
+.vp-doc {
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3 {
+  letter-spacing: -0.01em;
+}
+
+.vp-doc p {
+  margin: 14px 0;
+}
+
+/* 侧边栏更紧凑一点 */
+.VPSidebarItem .item {
+  padding: 6px 0;
+}
+
+/* 给目录页的列表更像“文章列表” */
+.vp-doc ul > li {
+  margin: 8px 0;
+}
+
+.vp-doc a {
+  text-underline-offset: 3px;
+}
+
+/* 暗色模式微调品牌色对比 */
+.dark:root {
+  --vp-c-brand-1: #7aa2ff;
+  --vp-c-brand-2: #5b8cff;
+  --vp-c-brand-3: #3e73ff;
+}
