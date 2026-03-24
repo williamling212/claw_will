@@ -60,6 +60,10 @@ for (const rel of filesRel) {
 
 // -------- 1) Generate auto index page (Markdown) --------
 const lines = []
+lines.push('---')
+lines.push('title: 内容目录')
+lines.push('---')
+lines.push('')
 lines.push('# 内容目录')
 lines.push('')
 lines.push('本页由构建脚本自动生成：扫描 `company_analysis` 仓库并生成可点击目录。')
@@ -70,7 +74,9 @@ if (groups.has('ROOT')) {
   if (rootReadme) {
     lines.push('## 总览')
     lines.push('')
-    lines.push(`- [README](${mdLinkFromRel(rootReadme)})`)
+    lines.push('<div class="dir-list">')
+    lines.push(`  <a class="dir-item" href="${mdLinkFromRel(rootReadme)}">README</a>`)
+    lines.push('</div>')
     lines.push('')
   }
 }
@@ -86,9 +92,13 @@ for (const g of groupNames) {
     .filter(r => !r.toLowerCase().endsWith('/readme.md'))
     .sort((a, b) => a.localeCompare(b, 'zh-Hans-CN'))
 
+  lines.push('<div class="dir-list">')
   for (const rel of rels) {
-    lines.push(`- [${titleFromRel(rel)}](${mdLinkFromRel(rel)})`)
+    const text = titleFromRel(rel)
+    const href = mdLinkFromRel(rel)
+    lines.push(`  <a class="dir-item" href="${href}">${text}</a>`)
   }
+  lines.push('</div>')
   lines.push('')
 }
 

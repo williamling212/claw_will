@@ -30,12 +30,26 @@
   text-rendering: optimizeLegibility;
 }
 
+/* 正文宽度：更适合大屏阅读（更“宽”，但仍保持可读性） */
+.VPDoc .container {
+  max-width: 1240px;
+}
+
 /* 正文容器：增加一点“纸张感”，但保持克制 */
 .VPDoc .content-container {
-  padding: 22px 26px;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 24px 30px;
   border: 1px solid var(--vp-c-divider);
   border-radius: 14px;
-  background: color-mix(in srgb, var(--vp-c-bg) 92%, var(--vp-c-brand-1) 8%);
+  background: color-mix(in srgb, var(--vp-c-bg) 93%, var(--vp-c-brand-1) 7%);
+}
+
+@media (max-width: 768px) {
+  .VPDoc .content-container {
+    padding: 18px 18px;
+    border-radius: 12px;
+  }
 }
 
 .dark .VPDoc .content-container {
@@ -109,9 +123,38 @@
   padding: 6px 0;
 }
 
-/* 给目录页的列表更像“文章列表” */
-.vp-doc ul > li {
-  margin: 8px 0;
+/* 目录页（自动生成）：更像 Notion 风格的条目卡片 */
+.dir-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 12px 0 6px;
+}
+
+@media (max-width: 768px) {
+  .dir-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dir-item {
+  display: block;
+  padding: 10px 12px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--vp-c-bg-soft) 88%, var(--vp-c-bg) 12%);
+  color: var(--vp-c-text-1);
+  text-decoration: none;
+  line-height: 1.5;
+}
+
+.dir-item:hover {
+  border-color: color-mix(in srgb, var(--vp-c-brand-1) 55%, var(--vp-c-divider) 45%);
+  background: color-mix(in srgb, var(--vp-c-bg-soft) 75%, var(--vp-c-brand-1) 25%);
+}
+
+.dir-item:active {
+  transform: translateY(0.5px);
 }
 
 .vp-doc a {
