@@ -8,6 +8,9 @@
     "docs:preview": "vitepress preview docs --port 4173"
   },
   "devDependencies": {
+    "tweetnacl": "^1.0.3",
+    "tweetnacl-sealedbox-js": "^1.2.0",
+    "tweetnacl-util": "^0.15.1",
     "vitepress": "^1.6.4"
   }
 }

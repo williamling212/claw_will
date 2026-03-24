@@ -19,7 +19,11 @@ export default defineConfig({
           text: '公司分析',
           items: [
             { text: '导览', link: '/company/' },
-            { text: '目录（内容仓库）', link: '/company/content/' }
+            { text: '内容目录', link: '/company/content/' },
+            {
+              text: '字节跳动',
+              link: '/company/content/company_analysis/字节跳动/notes'
+            }
           ]
         }
       ]
