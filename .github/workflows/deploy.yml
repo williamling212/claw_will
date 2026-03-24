@@ -20,8 +20,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: true
+
+      - name: Checkout company_analysis (private)
+        env:
+          COMPANY_ANALYSIS_TOKEN: ${{ secrets.COMPANY_ANALYSIS_TOKEN }}
+        run: |
+          set -eux
+          # Clone private content repo into docs path (do NOT use git submodule in Actions)
+          rm -rf docs/company/content/company_analysis
+          git clone --depth 1 \
+            "https://x-access-token:${COMPANY_ANALYSIS_TOKEN}@github.com/williamling212/company_analysis.git" \
+            docs/company/content/company_analysis
 
       - name: Setup Node
         uses: actions/setup-node@v4
