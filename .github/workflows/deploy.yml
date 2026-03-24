@@ -41,6 +41,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Generate auto index for company_analysis
+        run: node scripts/generate_company_index.mjs
+
       - name: Build
         run: npm run docs:build
 
