@@ -30,19 +30,36 @@
   text-rendering: optimizeLegibility;
 }
 
+/* 手机端：字号稍微收一点（避免“太大”） */
+@media (max-width: 768px) {
+  .vp-doc {
+    font-size: 15px;
+    line-height: 1.8;
+  }
+}
+
 /* 正文宽度：更适合大屏阅读（更“宽”，但仍保持可读性） */
 .VPDoc .container {
-  max-width: 1240px;
+  /* 让 27 寸大屏也更“铺开”，减少两侧空白 */
+  max-width: 1440px;
 }
 
 /* 正文容器：增加一点“纸张感”，但保持克制 */
 .VPDoc .content-container {
-  max-width: 980px;
+  /* 桌面端更宽一些 */
+  max-width: 1120px;
   margin: 0 auto;
-  padding: 24px 30px;
+  padding: 26px 34px;
   border: 1px solid var(--vp-c-divider);
   border-radius: 14px;
-  background: color-mix(in srgb, var(--vp-c-bg) 93%, var(--vp-c-brand-1) 7%);
+  background: color-mix(in srgb, var(--vp-c-bg) 94%, var(--vp-c-brand-1) 6%);
+}
+
+/* 超大屏再放宽一点 */
+@media (min-width: 1536px) {
+  .VPDoc .content-container {
+    max-width: 1200px;
+  }
 }
 
 @media (max-width: 768px) {
