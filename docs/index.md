@@ -9,8 +9,8 @@ hero:
       text: 进入公司分析
       link: /company/
     - theme: alt
-      text: 查看内容目录
-      link: /company/content/
+      text: 进入经济观察
+      link: /econ/
 features:
   - title: 内容与网站解耦
     details: company_analysis 作为内容仓库独立演进；网站负责展示与导航。
