@@ -21,16 +21,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Checkout company_analysis (private)
+      - name: Checkout private content repos
         env:
-          COMPANY_ANALYSIS_TOKEN: ${{ secrets.COMPANY_ANALYSIS_TOKEN }}
+          CONTENT_TOKEN: ${{ secrets.COMPANY_ANALYSIS_TOKEN }}
         run: |
           set -eux
-          # Clone private content repo into docs path (do NOT use git submodule in Actions)
+          # Clone private content repos into docs path
           rm -rf docs/company/content/company_analysis
           git clone --depth 1 \
-            "https://x-access-token:${COMPANY_ANALYSIS_TOKEN}@github.com/williamling212/company_analysis.git" \
+            "https://x-access-token:${CONTENT_TOKEN}@github.com/williamling212/company_analysis.git" \
             docs/company/content/company_analysis
+
+          rm -rf docs/econ/content/economic_observation
+          git clone --depth 1 \
+            "https://x-access-token:${CONTENT_TOKEN}@github.com/williamling212/economic_observation.git" \
+            docs/econ/content/economic_observation
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -41,8 +46,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Generate auto index for company_analysis
-        run: node scripts/generate_company_index.mjs
+      - name: Generate auto indexes
+        run: |
+          node scripts/generate_company_index.mjs
+          node scripts/generate_econ_index.mjs
 
       - name: Build
         run: npm run docs:build
