@@ -57,10 +57,21 @@ const filesAbs = fs.existsSync(contentRoot) ? walk(contentRoot) : []
 const filesRel = filesAbs.map(f => path.relative(contentRoot, f))
 
 // Group by first segment
+// Root-level .md files (no subdirectory, not README) go into a "散篇" group
+// so they don't each become a standalone h2 heading.
 const groups = new Map()
 for (const rel of filesRel) {
-  const seg = rel.split(path.sep)[0] || ''
-  const group = seg.toLowerCase() === 'readme.md' ? 'ROOT' : seg
+  const parts = rel.split(path.sep)
+  const isRootFile = parts.length === 1
+  const isReadme = rel.toLowerCase() === 'readme.md'
+  let group
+  if (isReadme) {
+    group = 'ROOT'
+  } else if (isRootFile) {
+    group = '散篇'
+  } else {
+    group = parts[0]
+  }
   if (!groups.has(group)) groups.set(group, [])
   groups.get(group).push(rel)
 }
