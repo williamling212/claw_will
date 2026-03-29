@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { execSync } from 'node:child_process'
 
 const repoRoot = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
 const contentRoot = path.join(repoRoot, 'docs/company/content/company_analysis')
@@ -40,10 +41,17 @@ function titleFromRel(rel) {
   return path.basename(rel, '.md')
 }
 
-function extractDate(rel) {
-  // Find YYYY-MM-DD anywhere in the path or filename
-  const m = rel.match(/(20\d{2}-\d{2}-\d{2})/)
-  return m ? m[1] : null
+function gitDate(absPath) {
+  try {
+    const out = execSync(`git log -1 --format=%ci -- "${absPath}"`, {
+      cwd: contentRoot,
+      encoding: 'utf-8',
+      timeout: 5000
+    }).trim()
+    return out ? out.slice(0, 10) : null
+  } catch {
+    return null
+  }
 }
 
 const filesAbs = fs.existsSync(contentRoot) ? walk(contentRoot) : []
@@ -141,16 +149,17 @@ fs.writeFileSync(
 )
 
 // -------- 3) Generate "recent updates" list for homepage --------
-// Heuristic: pick files with a date in name/path; sort desc by date.
-const dated = filesRel
+// 用 git commit 日期代替文件名日期
+const withDates = filesRel
+  .filter(r => !r.toLowerCase().endsWith('/readme.md'))
   .map(rel => ({
     rel,
-    date: extractDate(rel)
+    date: gitDate(path.join(contentRoot, rel))
   }))
   .filter(x => x.date)
   .sort((a, b) => b.date.localeCompare(a.date))
 
-const recent = dated.slice(0, 8).map(x => ({
+const recent = withDates.slice(0, 8).map(x => ({
   text: titleFromRel(x.rel),
   date: x.date,
   link: docLinkFromRel(x.rel)
