@@ -28,12 +28,12 @@ jobs:
           set -eux
           # Clone private content repos into docs path
           rm -rf docs/company/content/company_analysis
-          git clone --depth 1 \
+          git clone \
             "https://x-access-token:${CONTENT_TOKEN}@github.com/williamling212/company_analysis.git" \
             docs/company/content/company_analysis
 
           rm -rf docs/econ/content/economic_observation
-          git clone --depth 1 \
+          git clone \
             "https://x-access-token:${CONTENT_TOKEN}@github.com/williamling212/economic_observation.git" \
             docs/econ/content/economic_observation
 
