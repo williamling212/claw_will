@@ -37,10 +37,12 @@ jobs:
             "https://x-access-token:${CONTENT_TOKEN}@github.com/williamling212/economic_observation.git" \
             docs/econ/content/economic_observation
 
+          # science_exploration: graceful skip if repo not yet accessible or token lacks permission
           rm -rf docs/science/content/science_exploration
           git clone \
             "https://x-access-token:${CONTENT_TOKEN}@github.com/williamling212/science_exploration.git" \
-            docs/science/content/science_exploration
+            docs/science/content/science_exploration \
+            || echo "⚠️  science_exploration clone failed – building without science content"
 
       - name: Setup Node
         uses: actions/setup-node@v4
