@@ -11,23 +11,27 @@ hero:
     - theme: alt
       text: 进入经济观察
       link: /econ/
+    - theme: alt
+      text: 进入科学探索
+      link: /science/
 features:
   - title: 内容与网站解耦
-    details: company_analysis 与 economic_observation 作为内容仓库独立演进；网站负责展示与导航。
+    details: company_analysis、economic_observation 与 science_exploration 作为内容仓库独立演进；网站负责展示与导航。
   - title: 自动同步
     details: 每次 push 内容仓库都会触发站点重新部署。
   - title: 极简但不简陋
-    details: 更舒服的中文排版与站内搜索，重点是"能读、好找、好维护"。
+    details: 更舒服的中文排版与站内搜索，重点是「能读、好找、好维护」。
 ---
 
 <script setup>
 import { withBase } from 'vitepress'
 import { recentCompanyUpdates } from './.vitepress/generated/recentCompanyUpdates.mjs'
 import { recentEconUpdates } from './.vitepress/generated/recentEconUpdates.mjs'
+import { recentScienceUpdates } from './.vitepress/generated/recentScienceUpdates.mjs'
 import { computed } from 'vue'
 
 const allRecent = computed(() => {
-  return [...recentCompanyUpdates, ...recentEconUpdates]
+  return [...recentCompanyUpdates, ...recentEconUpdates, ...recentScienceUpdates]
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 10)
 })
