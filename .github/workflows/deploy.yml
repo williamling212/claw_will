@@ -37,6 +37,11 @@ jobs:
             "https://x-access-token:${CONTENT_TOKEN}@github.com/williamling212/economic_observation.git" \
             docs/econ/content/economic_observation
 
+          rm -rf docs/science/content/science_exploration
+          git clone \
+            "https://x-access-token:${CONTENT_TOKEN}@github.com/williamling212/science_exploration.git" \
+            docs/science/content/science_exploration
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -50,6 +55,7 @@ jobs:
         run: |
           node scripts/generate_company_index.mjs
           node scripts/generate_econ_index.mjs
+          node scripts/generate_science_index.mjs
 
       - name: Build
         run: npm run docs:build

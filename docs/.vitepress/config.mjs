@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
 import { companySidebar } from './generated/companySidebar.mjs'
 import { econSidebar } from './generated/econSidebar.mjs'
+import { scienceSidebar } from './generated/scienceSidebar.mjs'
 
 export default defineConfig({
   lang: 'zh-CN',
@@ -12,7 +13,7 @@ export default defineConfig({
 
   lastUpdated: true,
   cleanUrls: true,
-  // company_analysis 内容在 CI 构建时拉取；本地不一定存在，避免死链检查导致构建失败
+  // 内容在 CI 构建时拉取；本地不一定存在，避免死链检查导致构建失败
   ignoreDeadLinks: true,
 
   themeConfig: {
@@ -22,12 +23,14 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: '公司分析', link: '/company/' },
       { text: '经济观察', link: '/econ/' },
+      { text: '科学探索', link: '/science/' },
       { text: '关于', link: '/about' }
     ],
 
     sidebar: {
       ...companySidebar,
-      ...econSidebar
+      ...econSidebar,
+      ...scienceSidebar
     },
 
     outline: { level: [2, 3], label: '本页目录' },
