@@ -120,11 +120,9 @@ function draw() {
     return { cx: W / 2 + wx * scl, cy: gndY - wy * scl }
   }
 
-  // ── Background ──
   ctx.fillStyle = '#080808'
   ctx.fillRect(0, 0, W, H)
 
-  // ── Grid ──
   ctx.strokeStyle = 'rgba(255,255,255,0.04)'
   ctx.lineWidth = 0.5
   const gs = 100
@@ -137,12 +135,10 @@ function draw() {
     ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(W, cy); ctx.stroke()
   }
 
-  // ── Ground ──
   ctx.strokeStyle = 'rgba(255,255,255,0.12)'
   ctx.lineWidth = 1
   ctx.beginPath(); ctx.moveTo(0, gndY); ctx.lineTo(W, gndY); ctx.stroke()
 
-  // ── Landing pad ──
   const padW = 50 * scl
   const { cx: px } = wtc(0, 0)
   ctx.strokeStyle = '#ffffff'
@@ -153,7 +149,6 @@ function draw() {
   ctx.moveTo(px - 7, gndY - 9); ctx.lineTo(px, gndY); ctx.lineTo(px + 7, gndY - 9)
   ctx.stroke()
 
-  // ── Planned trajectory — dim dashed white ──
   if (plannedPts.length > 1) {
     ctx.strokeStyle = 'rgba(255,255,255,0.2)'
     ctx.lineWidth = 1
@@ -167,7 +162,6 @@ function draw() {
     ctx.setLineDash([])
   }
 
-  // ── Actual trajectory — bright white ──
   if (actualPath.length > 1) {
     ctx.strokeStyle = 'rgba(255,255,255,0.92)'
     ctx.lineWidth = 1.5
@@ -179,13 +173,11 @@ function draw() {
     ctx.stroke()
   }
 
-  // ── Rocket ──
   const { cx: rx, cy: ry } = wtc(state.x, state.y)
   const rW = 9, rH = 34
   ctx.save()
   ctx.translate(rx, ry)
   ctx.rotate(state.theta)
-
   ctx.strokeStyle = '#ffffff'
   ctx.lineWidth = 1.5
   ctx.strokeRect(-rW / 2, -rH, rW, rH)
@@ -194,7 +186,6 @@ function draw() {
   ctx.moveTo(-rW / 2 - 4, 0); ctx.lineTo(0, 9); ctx.lineTo(rW / 2 + 4, 0)
   ctx.stroke()
 
-  // Engine exhaust — white lines
   const ref_ = evalPlan(plan, Math.min(simTime, plan.Tf))
   if (!isFinished.value && ref_.F_m > 0.5) {
     const len = Math.min(55, ref_.F_m * 2.2)
@@ -208,7 +199,6 @@ function draw() {
   }
   ctx.restore()
 
-  // ── Thrust profile mini-chart ──
   const cX = 16, cY = H - 10, cW = 190, cH = 58
   ctx.fillStyle = 'rgba(0,0,0,0.72)'
   ctx.fillRect(cX, cY - cH, cW, cH)
@@ -249,7 +239,6 @@ function draw() {
   ctx.fillStyle = 'rgba(255,255,255,0.18)'
   ctx.fillText('F_max=' + fMax, cX + cW - 58, fmaxCy - 3)
 
-  // ── Telemetry ──
   ctx.font = '12px "JetBrains Mono", "Fira Code", monospace'
   ctx.fillStyle = 'rgba(255,255,255,0.82)'
   ctx.textAlign = 'right'
@@ -265,7 +254,6 @@ function draw() {
   ctx.fillText('T-   ' + tRem.toFixed(1).padStart(7) + ' s', tx, ty); ty += lh
   ctx.fillText('Tf   ' + plan.Tf.toFixed(1).padStart(7) + ' s', tx, ty)
 
-  // ── Status overlay ──
   if (isFinished.value) {
     ctx.textAlign = 'center'
     if (failMsg.value) {
@@ -349,7 +337,7 @@ button {
 button:hover { border-color: #ffffff; color: #ffffff; }
 .algo-tag { font-size: 11px; color: rgba(255,255,255,0.2); margin-left: 6px; }
 .rl-sliders { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 24px; }
-label { display: flex; flex-direction: column; font-size: 11px; color: rgba(255,255,255,0.35); gap: 3px; }
+label { display: flex; flex-direction: column; font-size: 11px; color: #ffffff; gap: 3px; }
 label span { color: #ffffff; font-size: 11px; }
 input[type="range"] { width: 100%; accent-color: #ffffff; cursor: pointer; }
 .rl-info { margin-top: 10px; font-size: 12px; color: rgba(255,255,255,0.3); }
