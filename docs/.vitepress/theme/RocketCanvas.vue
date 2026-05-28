@@ -2,7 +2,6 @@
 import { ref, reactive, watch, onMounted, onUnmounted } from 'vue'
 import { buildPlan, evalPlan, findOptimalTf, samplePlan } from './rocket/planB.js'
 
-// Parameters (user-controlled)
 const params = reactive({
   initH:    600,
   initX:    300,
@@ -13,7 +12,6 @@ const params = reactive({
   gravity:   9.8,
 })
 
-// Sim state
 const canvas      = ref(null)
 const isRunning   = ref(false)
 const isFinished  = ref(false)
@@ -52,11 +50,8 @@ function step() {
   if (simTime >= plan.Tf) { finish(false); return }
 
   const ref_ = evalPlan(plan, simTime)
-
-  // Attitude PD: track required thrust direction
   const thetaErr = ref_.angle - s.theta
   const alpha    = Math.max(-3, Math.min(3, 8 * thetaErr - 4 * s.omega))
-
   const F  = ref_.F_m
   const ax =  F * Math.sin(s.theta)
   const ay =  F * Math.cos(s.theta) - g
@@ -68,15 +63,14 @@ function step() {
   s.theta += s.omega * DT
   s.omega += alpha   * DT
   simTime += DT
-
   actualPath.push({ x: s.x, y: s.y })
 
   if (s.y <= 0) {
     s.y = 0
     const spd = Math.sqrt(s.vx * s.vx + s.vy * s.vy)
-    if (spd > 5)              finish(true, '撞击速度过快 ' + spd.toFixed(1) + ' m/s')
+    if (spd > 5)                 finish(true, '撞击速度过快 ' + spd.toFixed(1) + ' m/s')
     else if (Math.abs(s.x) > 25) finish(true, '偏离着陆台 ' + s.x.toFixed(0) + ' m')
-    else                      finish(false)
+    else                         finish(false)
   }
 }
 
@@ -126,12 +120,12 @@ function draw() {
     return { cx: W / 2 + wx * scl, cy: gndY - wy * scl }
   }
 
-  // Background
-  ctx.fillStyle = '#0a0a0a'
+  // ── Background ──
+  ctx.fillStyle = '#080808'
   ctx.fillRect(0, 0, W, H)
 
-  // Grid
-  ctx.strokeStyle = 'rgba(255,255,255,0.05)'
+  // ── Grid ──
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)'
   ctx.lineWidth = 0.5
   const gs = 100
   for (let gx = Math.floor(-hSpan / 2 / gs) * gs; gx <= hSpan / 2; gx += gs) {
@@ -143,27 +137,27 @@ function draw() {
     ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(W, cy); ctx.stroke()
   }
 
-  // Ground
-  ctx.strokeStyle = '#3a3a3a'
+  // ── Ground ──
+  ctx.strokeStyle = 'rgba(255,255,255,0.12)'
   ctx.lineWidth = 1
   ctx.beginPath(); ctx.moveTo(0, gndY); ctx.lineTo(W, gndY); ctx.stroke()
 
-  // Landing pad
+  // ── Landing pad ──
   const padW = 50 * scl
   const { cx: px } = wtc(0, 0)
-  ctx.strokeStyle = '#e0e0e0'
-  ctx.lineWidth = 2
+  ctx.strokeStyle = '#ffffff'
+  ctx.lineWidth = 1.5
   ctx.beginPath(); ctx.moveTo(px - padW / 2, gndY); ctx.lineTo(px + padW / 2, gndY); ctx.stroke()
   ctx.lineWidth = 1
   ctx.beginPath()
   ctx.moveTo(px - 7, gndY - 9); ctx.lineTo(px, gndY); ctx.lineTo(px + 7, gndY - 9)
   ctx.stroke()
 
-  // Planned trajectory (dashed cyan)
+  // ── Planned trajectory — dim dashed white ──
   if (plannedPts.length > 1) {
-    ctx.strokeStyle = 'rgba(0,212,255,0.45)'
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)'
     ctx.lineWidth = 1
-    ctx.setLineDash([4, 7])
+    ctx.setLineDash([5, 8])
     ctx.beginPath()
     plannedPts.forEach((p, i) => {
       const { cx, cy } = wtc(p.x, p.y)
@@ -173,9 +167,9 @@ function draw() {
     ctx.setLineDash([])
   }
 
-  // Actual trajectory (solid white)
+  // ── Actual trajectory — bright white ──
   if (actualPath.length > 1) {
-    ctx.strokeStyle = 'rgba(255,255,255,0.75)'
+    ctx.strokeStyle = 'rgba(255,255,255,0.92)'
     ctx.lineWidth = 1.5
     ctx.beginPath()
     actualPath.forEach((p, i) => {
@@ -185,13 +179,14 @@ function draw() {
     ctx.stroke()
   }
 
-  // Rocket
+  // ── Rocket ──
   const { cx: rx, cy: ry } = wtc(state.x, state.y)
   const rW = 9, rH = 34
   ctx.save()
   ctx.translate(rx, ry)
   ctx.rotate(state.theta)
-  ctx.strokeStyle = '#e0e0e0'
+
+  ctx.strokeStyle = '#ffffff'
   ctx.lineWidth = 1.5
   ctx.strokeRect(-rW / 2, -rH, rW, rH)
   ctx.lineWidth = 1
@@ -199,37 +194,37 @@ function draw() {
   ctx.moveTo(-rW / 2 - 4, 0); ctx.lineTo(0, 9); ctx.lineTo(rW / 2 + 4, 0)
   ctx.stroke()
 
-  // Engine exhaust
+  // Engine exhaust — white lines
   const ref_ = evalPlan(plan, Math.min(simTime, plan.Tf))
   if (!isFinished.value && ref_.F_m > 0.5) {
     const len = Math.min(55, ref_.F_m * 2.2)
-    ctx.strokeStyle = 'rgba(255,210,140,0.9)'
+    ctx.strokeStyle = 'rgba(255,255,255,0.7)'
     ctx.lineWidth = 1.2
     ctx.beginPath(); ctx.moveTo(0, 9); ctx.lineTo(0, 9 + len); ctx.stroke()
-    ctx.strokeStyle = 'rgba(255,180,80,0.45)'
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)'
     ctx.lineWidth = 0.8
     ctx.beginPath(); ctx.moveTo(-2, 9); ctx.lineTo(-7, 9 + len * 0.72); ctx.stroke()
     ctx.beginPath(); ctx.moveTo( 2, 9); ctx.lineTo( 7, 9 + len * 0.72); ctx.stroke()
   }
   ctx.restore()
 
-  // Thrust profile mini-chart (bottom-left)
+  // ── Thrust profile mini-chart ──
   const cX = 16, cY = H - 10, cW = 190, cH = 58
-  ctx.fillStyle = 'rgba(0,0,0,0.55)'
+  ctx.fillStyle = 'rgba(0,0,0,0.72)'
   ctx.fillRect(cX, cY - cH, cW, cH)
-  ctx.strokeStyle = '#222'
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)'
   ctx.lineWidth = 0.5
   ctx.strokeRect(cX, cY - cH, cW, cH)
 
   const fMax   = params.maxAccel
   const fmaxCy = cY - cH + 8
-  ctx.strokeStyle = 'rgba(255,80,80,0.5)'
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)'
   ctx.lineWidth = 0.5
-  ctx.setLineDash([3, 4])
+  ctx.setLineDash([3, 5])
   ctx.beginPath(); ctx.moveTo(cX, fmaxCy); ctx.lineTo(cX + cW, fmaxCy); ctx.stroke()
   ctx.setLineDash([])
 
-  ctx.strokeStyle = 'rgba(0,212,255,0.7)'
+  ctx.strokeStyle = 'rgba(255,255,255,0.65)'
   ctx.lineWidth = 1
   ctx.beginPath()
   plannedPts.forEach((p, i) => {
@@ -240,7 +235,7 @@ function draw() {
   ctx.stroke()
 
   const tFrac = Math.min(simTime / plan.Tf, 1)
-  ctx.strokeStyle = '#e0e0e0'
+  ctx.strokeStyle = 'rgba(255,255,255,0.35)'
   ctx.lineWidth = 1
   ctx.beginPath()
   ctx.moveTo(cX + tFrac * cW, cY - cH)
@@ -248,15 +243,15 @@ function draw() {
   ctx.stroke()
 
   ctx.font = '10px monospace'
-  ctx.fillStyle = '#444'
+  ctx.fillStyle = 'rgba(255,255,255,0.25)'
   ctx.textAlign = 'left'
   ctx.fillText('THRUST  F/m (m/s²)', cX + 2, cY - cH - 3)
-  ctx.fillStyle = '#ff5050'
+  ctx.fillStyle = 'rgba(255,255,255,0.18)'
   ctx.fillText('F_max=' + fMax, cX + cW - 58, fmaxCy - 3)
 
-  // Telemetry (top-right)
+  // ── Telemetry ──
   ctx.font = '12px "JetBrains Mono", "Fira Code", monospace'
-  ctx.fillStyle = '#00e87a'
+  ctx.fillStyle = 'rgba(255,255,255,0.82)'
   ctx.textAlign = 'right'
   const tx = W - 14
   let ty = 22
@@ -268,20 +263,19 @@ function draw() {
   ctx.fillText('HRZ  ' + state.x.toFixed(0).padStart(6) + ' m', tx, ty); ty += lh
   ctx.fillText('ATT  ' + (state.theta * 180 / Math.PI).toFixed(1).padStart(6) + '°', tx, ty); ty += lh
   ctx.fillText('T-   ' + tRem.toFixed(1).padStart(7) + ' s', tx, ty); ty += lh
-  ctx.fillStyle = '#00d4ff'
   ctx.fillText('Tf   ' + plan.Tf.toFixed(1).padStart(7) + ' s', tx, ty)
 
-  // Status overlay
+  // ── Status overlay ──
   if (isFinished.value) {
     ctx.textAlign = 'center'
     if (failMsg.value) {
-      ctx.fillStyle = 'rgba(255,60,60,0.9)'
+      ctx.fillStyle = 'rgba(255,255,255,0.7)'
       ctx.font = 'bold 15px monospace'
       ctx.fillText('▲ LANDING FAILED', W / 2, H / 2 - 10)
       ctx.font = '12px monospace'
       ctx.fillText(failMsg.value, W / 2, H / 2 + 12)
     } else {
-      ctx.fillStyle = 'rgba(0,232,122,0.9)'
+      ctx.fillStyle = 'rgba(255,255,255,0.95)'
       ctx.font = 'bold 15px monospace'
       ctx.fillText('✓ LANDING NOMINAL', W / 2, H / 2 - 10)
     }
@@ -321,7 +315,7 @@ watch(params, () => { if (!isRunning.value) reset() }, { deep: true })
       </div>
       <div class="rl-info">
         <span>&#26368;&#20248;&#39069;&#39154;&#26102;&#38388; <em>T<sub>f</sub></em> = <strong>{{ simTf.toFixed(1) }} s</strong></span>
-        <span class="legend">&#38738;&#34382;&#32447; = &#35268;&#21010;&#36335;&#24452;&nbsp;|&nbsp;&#30333;&#23454;&#32447; = &#23454;&#38469;&#36335;&#24452;</span>
+        <span class="legend">&#8213;&#8213; &#35268;&#21010;&#36335;&#24452;&nbsp;&nbsp;&#9135; &#23454;&#38469;&#36335;&#24452;</span>
       </div>
     </div>
   </div>
@@ -330,8 +324,8 @@ watch(params, () => { if (!isRunning.value) reset() }, { deep: true })
 <style scoped>
 .rl-wrap {
   font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
-  background: #0a0a0a;
-  border: 1px solid #1e1e1e;
+  background: #080808;
+  border: 1px solid rgba(255,255,255,0.07);
   border-radius: 6px;
   padding: 14px;
   margin: 28px 0;
@@ -341,25 +335,25 @@ watch(params, () => { if (!isRunning.value) reset() }, { deep: true })
 .rl-btns { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
 button {
   padding: 5px 14px;
-  border: 1px solid #444;
+  border: 1px solid rgba(255,255,255,0.2);
   background: transparent;
-  color: #ccc;
+  color: rgba(255,255,255,0.55);
   cursor: pointer;
   font-family: inherit;
   font-size: 12px;
   border-radius: 3px;
   transition: border-color 0.15s, color 0.15s;
 }
-.btn-run   { border-color: #00d4ff; color: #00d4ff; }
-.btn-pause { border-color: #ffa040; color: #ffa040; }
-button:hover { border-color: #e0e0e0; color: #e0e0e0; }
-.algo-tag { font-size: 11px; color: #444; margin-left: 6px; }
+.btn-run   { border-color: #ffffff; color: #ffffff; }
+.btn-pause { border-color: rgba(255,255,255,0.55); color: rgba(255,255,255,0.55); }
+button:hover { border-color: #ffffff; color: #ffffff; }
+.algo-tag { font-size: 11px; color: rgba(255,255,255,0.2); margin-left: 6px; }
 .rl-sliders { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 24px; }
-label { display: flex; flex-direction: column; font-size: 11px; color: #666; gap: 3px; }
-label span { color: #00e87a; font-size: 11px; }
-input[type="range"] { width: 100%; accent-color: #00d4ff; cursor: pointer; }
-.rl-info { margin-top: 10px; font-size: 12px; color: #888; }
-.rl-info strong { color: #00d4ff; }
+label { display: flex; flex-direction: column; font-size: 11px; color: rgba(255,255,255,0.35); gap: 3px; }
+label span { color: #ffffff; font-size: 11px; }
+input[type="range"] { width: 100%; accent-color: #ffffff; cursor: pointer; }
+.rl-info { margin-top: 10px; font-size: 12px; color: rgba(255,255,255,0.3); }
+.rl-info strong { color: #ffffff; }
 .rl-info em { font-style: normal; }
-.legend { margin-left: 20px; color: #444; }
+.legend { margin-left: 20px; color: rgba(255,255,255,0.2); }
 </style>
