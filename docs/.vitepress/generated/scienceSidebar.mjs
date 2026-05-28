@@ -4,14 +4,9 @@ export const scienceSidebar = {
     {
       "text": "科学探索",
       "items": [
-        {
-          "text": "导览",
-          "link": "/science/"
-        },
-        {
-          "text": "内容目录",
-          "link": "/science/content/"
-        }
+        { "text": "导览", "link": "/science/" },
+        { "text": "内容目录", "link": "/science/content/" },
+        { "text": "火箭回收制导算法", "link": "/science/rocket-landing/" }
       ]
     }
   ]
